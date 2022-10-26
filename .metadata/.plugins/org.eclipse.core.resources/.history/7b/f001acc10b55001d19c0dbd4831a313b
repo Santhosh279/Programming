@@ -1,0 +1,130 @@
+package com.framework.selenium.base;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.testng.annotations.BeforeSuite;
+
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.MediaEntityModelProvider;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.reporter.configuration.ChartLocation;
+import com.aventstack.extentreports.reporter.configuration.Theme;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+
+public abstract class Reporter {
+	public ExtentTest test;
+	public static ExtentReports extent;
+	public String testCaseName, testDescription, category;
+	private String fileName = "result.html";
+	public static String folderName = "";
+	private String pattern = "dd-MMM-yyyy HH-mm-ss";
+	private static final ThreadLocal<ExtentTest> extentTest = new ThreadLocal<ExtentTest>();
+	
+	@BeforeSuite(alwaysRun = true)
+	public synchronized void startReport() {
+		String date = new SimpleDateFormat(pattern).format(new Date());
+		folderName = "reports/" + date;
+
+		File folder = new File("./" + folderName);
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("./" + folderName + "/" + fileName);
+		htmlReporter.config().setTestViewChartLocation(ChartLocation.BOTTOM);
+		htmlReporter.config().setChartVisibilityOnOpen(!true);
+		htmlReporter.config().setTheme(Theme.STANDARD);
+		htmlReporter.config().setDocumentTitle("Salesforce");
+		htmlReporter.config().setEncoding("utf-8");
+		htmlReporter.config().setReportName("Salesforce");
+		htmlReporter.setAppendExisting(true);
+		extent = new ExtentReports(System.getProperty("user.dri") +"/test-output/ExtentReportResult.html");
+		//extent.attachReporter(htmlReporter);
+	}
+	
+	public static void startTest(){
+		extent = new ExtentReports(System.getProperty("user.dri") +"/test-output/ExtentReportResult.html", true);
+	}
+	
+	/*
+	 * public void reportStep(String desc, String status) {
+	 * 
+	 * long snapNumber = 100000l;
+	 * 
+	 * try { snapNumber= takeSnap(); } catch (Exception e) { e.printStackTrace(); }
+	 * 
+	 * // Write if it is successful or failure or information
+	 * if(status.toUpperCase().equals("PASS")){ test.log(LogStatus.PASS, desc+test.
+	 * addScreenCapture("./../reports/images/"+snapNumber+".jpg")); }else
+	 * if(status.toUpperCase().equals("FAIL")){ test.log(LogStatus.FAIL,
+	 * desc+test.addScreenCapture("./../reports/images/"+snapNumber+".jpg")); throw
+	 * new RuntimeException("FAILED"); }else
+	 * if(status.toUpperCase().equals("INFO")){ test.log(LogStatus.INFO, desc); } }
+	 * 
+	 */		
+	
+	public void reportStep(String desc, String status) {
+		synchronized (test) {
+
+			// Start reporting the step and snapshot
+			MediaEntityModelProvider img = null;
+			if (!(status.equalsIgnoreCase("INFO") || status.equalsIgnoreCase("skipped")
+					)) {
+				long snapNumber = 100000L;
+				snapNumber = takeSnap();
+				try {
+					img = MediaEntityBuilder
+							.createScreenCaptureFromPath("./../../" + folderName + "/images/" + snapNumber + ".jpg")
+							.build();
+				} catch (IOException e) {
+				}
+			}
+			if (status.equalsIgnoreCase("pass")) {
+				test.getRunStatus();
+				//test.get().pass(desc, img);
+			} else if (status.equalsIgnoreCase("fail")) { // additional steps to manage alert pop-up
+				//test.get().fail(desc, img);
+				test.getRunStatus();
+				throw new RuntimeException("See the reporter for details.");
+
+			} else if (status.equalsIgnoreCase("warning")) {
+				//test.get().warning(desc, img);
+				test.getRunStatus();
+			} else if (status.equalsIgnoreCase("skipped")) {
+				//test.get().skip("The test is skipped due to dependency failure");
+				test.getRunStatus();
+			} else if (status.equalsIgnoreCase("INFO")) {
+				//test.get().info(desc);
+				test.getRunStatus();
+			}
+
+			
+		}
+	}
+	public abstract long takeSnap();
+			
+			public ExtentReports startResult(){
+				extent = new ExtentReports("./reports/result.html", false);
+				extent.loadConfig(new File("src/main/java/com//framework/selenium/base/extent-config.xml"));
+				return extent;
+			}
+			
+			
+
+			public ExtentTest startTestCase(String testCaseName, String testDescription){
+				test = extent.startTest(testCaseName, testDescription);
+				return test;
+			}
+
+			public void endResult(){		
+				extent.flush();
+			}
+
+			public void endTestcase(){
+				extent.endTest(test);
+			}
+}

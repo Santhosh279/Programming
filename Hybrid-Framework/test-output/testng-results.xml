@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2022-10-26T18:27:01 BST" name="Default suite" finished-at="2022-10-26T18:27:39 BST" duration-ms="37790">
+    <groups>
+    </groups>
+    <test started-at="2022-10-26T18:27:01 BST" name="Default test" finished-at="2022-10-26T18:27:39 BST" duration-ms="37790">
+      <class name="com.framework.selenium.Hybrid_Framework.KervDigitalTestCase">
+        <test-method is-config="true" signature="startReport()[pri:0, instance:com.framework.selenium.Hybrid_Framework.KervDigitalTestCase@434a63ab]" started-at="2022-10-26T18:27:01 BST" name="startReport" finished-at="2022-10-26T18:27:01 BST" duration-ms="322" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- startReport -->
+        <test-method is-config="true" signature="setValues()[pri:0, instance:com.framework.selenium.Hybrid_Framework.KervDigitalTestCase@434a63ab]" started-at="2022-10-26T18:27:01 BST" name="setValues" finished-at="2022-10-26T18:27:01 BST" duration-ms="1" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setValues -->
+        <test-method is-config="true" signature="report()[pri:0, instance:com.framework.selenium.Hybrid_Framework.KervDigitalTestCase@434a63ab]" started-at="2022-10-26T18:27:01 BST" name="report" finished-at="2022-10-26T18:27:01 BST" duration-ms="9" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- report -->
+        <test-method signature="createProfile()[pri:0, instance:com.framework.selenium.Hybrid_Framework.KervDigitalTestCase@434a63ab]" started-at="2022-10-26T18:27:01 BST" name="createProfile" finished-at="2022-10-26T18:27:39 BST" duration-ms="37737" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createProfile -->
+        <test-method is-config="true" signature="stopReport()[pri:0, instance:com.framework.selenium.Hybrid_Framework.KervDigitalTestCase@434a63ab]" started-at="2022-10-26T18:27:39 BST" name="stopReport" finished-at="2022-10-26T18:27:40 BST" duration-ms="655" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- stopReport -->
+      </class> <!-- com.framework.selenium.Hybrid_Framework.KervDigitalTestCase -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

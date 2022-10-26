@@ -1,0 +1,117 @@
+package com.framework.selenium.design;
+
+import java.util.List;
+import org.openqa.selenium.WebElement;
+
+public interface Browser {
+
+	/**
+	 * This method will launch the Chrome browser and maximise the browser and set
+	 * the wait for 30 seconds and load the url
+	 * 
+	 * @param url - This will load the specified url `
+	 */
+	public void startApp(String url);
+
+	/**
+	 * This method will locate the element using any given locator
+	 * 
+	 * @param locatorType - The locator by which the element to be found
+	 * @param locValue    - The locator value by which the element to be found
+	 * @return The first matching element on the current context.
+	 */
+	public WebElement locateElement(Locators locatorType, String value);
+
+	/**
+	 * This method will locate the element using id
+	 * 
+	 * @param locValue - The locator value by which the element to be found
+	 * @return The first matching element on the current context.
+	 */
+	public WebElement locateElement(String value);
+
+	/**
+	 * This method will locates all matching element using any given locator
+	 * 
+	 * @param locatorType - The locator by which the element to be found
+	 * @param locValue    - The locator value by which the element to be found
+	 * @return A list of all WebElements, or an empty list if nothing matches.
+	 */
+	public List<WebElement> locateElements(Locators locatorType, String value);
+
+	/**
+	 * This method will switch to the Alert
+	 */
+	public void switchToAlert();
+
+	/**
+	 * This method will accept the alert opened
+	 */
+	public void acceptAlert();
+
+	/**
+	 * This method will dismiss the alert opened
+	 */
+	public void dismissAlert();
+
+	/**
+	 * This method will return the text of the alert
+	 */
+	public String getAlertText();
+
+	/**
+	 * This method will enter the value in the alert
+	 */
+	public void typeAlert(String data);
+
+	/**
+	 * This method will switch to the Window of interest
+	 * 
+	 * @param index The window index to be switched to. 0 -> first window
+	 */
+	public void switchToWindow(int index);
+
+	/**
+	 * This method will switch to the Window of interest using its title
+	 * 
+	 * @param title The window title to be switched to first window
+	 */
+	public boolean switchToWindow(String title);
+
+	/**
+	 * This method will switch to the specific frame using index
+	 * 
+	 * @param index - The int (frame) to be switched
+	 */
+	public void switchToFrame(int index);
+
+	/**
+	 * This method will switch to the specific frame
+	 * 
+	 * @param ele - The Webelement (frame) to be switched
+	 */
+	public void switchToFrame(WebElement ele);
+
+	/**
+	 * This method will switch to the specific frame using Id (or) Name
+	 * 
+	 * @param idOrName - The String (frame) to be switched
+	 */
+	public void switchToFrame(String idOrName);
+
+	/**
+	 * This method will switch to the first frame on the page
+	 */
+	public void defaultContent();
+
+	/**
+	 * This method will close the active browser
+	 */
+	public void close();
+
+	/**
+	 * This method will close all the browsers
+	 */
+	public void quit();
+
+}

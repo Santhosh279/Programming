@@ -1,0 +1,94 @@
+package com.framework.selenium.base;
+
+import java.io.File;
+import java.io.IOException;
+
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.MediaEntityModelProvider;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+
+public abstract class Reporter {
+	public ExtentTest test;
+	public static ExtentReports extent;
+	public String testCaseName, testDescription, category;
+	public static String folderName = "";
+	
+	public static void startTest(){
+		extent = new ExtentReports(System.getProperty("user.dri") +"/test-output/ExtentReportResult.html", true);
+	}
+	
+	/*
+	 * public void reportStep(String desc, String status) {
+	 * 
+	 * long snapNumber = 100000l;
+	 * 
+	 * try { snapNumber= takeSnap(); } catch (Exception e) { e.printStackTrace(); }
+	 * 
+	 * // Write if it is successful or failure or information
+	 * if(status.toUpperCase().equals("PASS")){ test.log(LogStatus.PASS, desc+test.
+	 * addScreenCapture("./../reports/images/"+snapNumber+".jpg")); }else
+	 * if(status.toUpperCase().equals("FAIL")){ test.log(LogStatus.FAIL,
+	 * desc+test.addScreenCapture("./../reports/images/"+snapNumber+".jpg")); throw
+	 * new RuntimeException("FAILED"); }else
+	 * if(status.toUpperCase().equals("INFO")){ test.log(LogStatus.INFO, desc); } }
+	 * 
+	 */		
+	
+	public void reportStep(String desc, String status, boolean bSnap) {
+		synchronized (test) {
+
+			// Start reporting the step and snapshot
+			MediaEntityModelProvider img = null;
+			if (bSnap && !(status.equalsIgnoreCase("INFO") || status.equalsIgnoreCase("skipped")
+					)) {
+				long snapNumber = 100000L;
+				snapNumber = takeSnap();
+				try {
+					img = MediaEntityBuilder
+							.createScreenCaptureFromPath("./../../" + folderName + "/images/" + snapNumber + ".jpg")
+							.build();
+				} catch (IOException e) {
+				}
+			}
+			if (status.equalsIgnoreCase("pass")) {
+				test.get().pass(desc, img);
+			} else if (status.equalsIgnoreCase("fail")) { // additional steps to manage alert pop-up
+				test.get().fail(desc, img);
+				throw new RuntimeException("See the reporter for details.");
+
+			} else if (status.equalsIgnoreCase("warning")) {
+				test.get().warning(desc, img);
+			} else if (status.equalsIgnoreCase("skipped")) {
+				test.get().skip("The test is skipped due to dependency failure");
+			} else if (status.equalsIgnoreCase("INFO")) {
+				test.get().info(desc);
+			}
+
+			
+		}
+	}
+	public abstract long takeSnap();
+			
+			public ExtentReports startResult(){
+				extent = new ExtentReports("./reports/result.html", false);
+				extent.loadConfig(new File("src/main/java/com//framework/selenium/base/extent-config.xml"));
+				return extent;
+			}
+			
+			
+
+			public ExtentTest startTestCase(String testCaseName, String testDescription){
+				test = extent.startTest(testCaseName, testDescription);
+				return test;
+			}
+
+			public void endResult(){		
+				extent.flush();
+			}
+
+			public void endTestcase(){
+				extent.endTest(test);
+			}
+}

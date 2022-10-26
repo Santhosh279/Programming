@@ -1,0 +1,60 @@
+package com.framework.selenium.testcases;
+
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
+
+import com.framework.selenium.base.GenericWrappers;
+
+public class TestCase1 extends GenericWrappers {
+	
+	@BeforeSuite 
+	public void beforesuite(){
+		startReport();
+		startTestCase(testcaseName, testDescription);
+		}
+	
+	@BeforeMethod
+	public void beforemethod(){
+		//startTestCase(testcaseName, testDescription);
+		//asignCategory(category);
+		invokeApp("Chrome","https://kerv.com/about-kerv/kerv-dividons/kerv-digital");
+	}
+@Test
+	public void captureLeadId () throws Exception {
+	//invokeApp("Chrome","https://kerv.com/about-kerv/kerv-dividons/kerv-digital");
+	clickByXpath("(//a[contains(text(), 'Accept all')])[1]");
+	clickByActions("(//a[contains(text(), 'Careers')])[1]");
+	clickByXpath("//a[text()='Job Opportunities']");
+	scrollDown("//div[contains(text(), 'Test Engineer (Hybrid Manual/Automation)')]");
+	doubleClick("(//div[contains(text(), 'UX Designer')])[1]");
+	//clickByXpath("(//div[contains(text(), 'UX Designer')])[1]");
+	switchToWindow(1);
+	scroll("//input[@id='candidate_first_name']");
+	enterById("candidate_first_name", "Santhosh");
+	enterById("candidate_last_name", "PV");
+	enterById("candidate_email", "sanzany07@gmail.com");
+	enterById("candidate_phone", "9874562314");
+   //scrollDownUsingJS();
+	Thread.sleep(2000);
+	doubleClickById("resume");
+	System.out.println("Resume is Clicked ");
+	scroll("(//label[contains(text(), 'Yes, I agree')])[1]");
+	Thread.sleep(2000);
+	//scrollDownUsingJS();
+	doubleClick("(//label[contains(text(), 'Yes, I agree')])[1]");	
+	clickByXpath("(//label[contains(text(), 'Yes, I agree')])[2]");
+	clickByXpath("//button[@name='_job_application_form']");
+	threadSleep(10000);
+	/*
+	 * String text =
+	 * "Thank you for your application. We will get back to you in due course.";
+	 * verifyTextByXpath("//p[contains(text(), 'Thank you for your application.')]",
+	 * text);
+	 */
+	quitBrowser();
+
+	}
+
+}

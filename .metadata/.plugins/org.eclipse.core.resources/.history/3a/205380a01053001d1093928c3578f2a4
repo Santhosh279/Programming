@@ -1,0 +1,9 @@
+package com.framework.selenium.base;
+
+public class DriverInstance 
+{
+    public static void main( String[] args )
+    {
+        System.out.println( "Hello World!" );
+    }
+}

@@ -1,0 +1,20 @@
+package com.framework.selenium.base;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class DriverInstance {
+	public static ChromeDriver driver;
+	public String excelFileName;
+	
+	public void openApp(String url) {				
+		System.out.println("Before Method Started");
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get(url);
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		System.out.println("Before Method Ended");
+	}
+}

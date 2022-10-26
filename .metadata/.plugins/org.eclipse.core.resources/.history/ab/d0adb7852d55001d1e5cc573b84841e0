@@ -1,0 +1,736 @@
+package com.framework.selenium.base;
+
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import org.testng.IAnnotationTransformer;
+import org.testng.annotations.ITestAnnotation;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+
+public class GenericWrappers extends Report implements Wrappers {
+	// Declare Driver Class
+	RemoteWebDriver driver;
+	WebDriverWait wait;
+	public static String parentHandle;
+	int i = 1;
+	int indexValue;
+
+	/**
+	 * Exceptions- WebDriverException
+	 */
+	// @Override
+	public void invokeApp(String browser, String Url) {
+
+		try {
+			if (browser.equalsIgnoreCase("chrome")) {
+				System.setProperty("webdriver.chrome.driver",
+						"E:\\UKInterview\\InterviewMaterials\\TestingInterviewMatierals\\Tools\\chromedriver\\chromedriver.exe");
+				driver = new ChromeDriver();
+			} else {
+				driver = new FirefoxDriver();
+			}
+			driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.get(Url);
+			wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+			parentHandle = driver.getWindowHandle();
+			reportStep("Browser is launched successfully","pass");
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+			 reportStep("Webdriver is lost or not found :" + e.getMessage(), "info");
+
+		} finally {
+			 takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void enterById(String idValue, String data) {
+		try {
+			driver.findElement(By.id(idValue)).clear();
+			driver.findElement(By.id(idValue)).sendKeys(data);
+			reportStep(data+" company name is entered successfully","pass");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + idValue + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void enterByName(String nameValue, String data) {
+		try {
+			driver.findElement(By.name(nameValue)).clear();
+			driver.findElement(By.name(nameValue)).sendKeys(data);
+			System.out.println("The value is entered");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + nameValue + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void enterByXpath(String xpathValue, String data) {
+		try {
+			driver.findElement(By.xpath(xpathValue)).clear();
+			driver.findElement(By.xpath(xpathValue)).sendKeys(data);
+			System.out.println("The value is entered");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpathValue + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- WebDriverException
+	 */
+	// @Override
+	public void verifyTitle(String title) {
+		try {
+			String expectedTitle = driver.getTitle();
+			if (expectedTitle.equals(title)) {
+				System.out.println("The title of the page is correct");
+			} else {
+				System.out.println("The title of the page is not correct");
+			}
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void verifyTextById(String id, String text) {
+		try {
+			String actualText = driver.findElement(By.id(id)).getText();
+			if (actualText.equals(text)) {
+				System.out.println("Displayed text is correct");
+			} else {
+				System.out.println("Displayed text is incorrect");
+			}
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + id + " is not found");
+
+		} catch (Exception e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void verifyTextByXpath(String xpath, String text) {
+		try {
+			String actualText = driver.findElement(By.xpath(xpath)).getText();
+			if (actualText.equals(text)) {
+				System.out.println("Displayed text is correct");
+			} else {
+				System.out.println("Displayed text is incorrect");
+			}
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpath + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void verifyTextContainsByXpath(String xpath, String text) {
+		try {
+			String actualText = driver.findElement(By.xpath(xpath)).getText();
+			if (actualText.contains(text)) {
+				System.out.println("The verification is Success");
+			} else {
+				System.out.println("The verification is fail");
+			}
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpath + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void verifyTextContainsById(String id, String text) {
+		try {
+			String actualText = driver.findElement(By.id(id)).getText();
+			if (actualText.contains(text)) {
+				System.out.println("The verification is Success");
+			} else {
+				System.out.println("The verification is fail");
+			}
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + id + " is not found");
+
+		} catch (WebDriverException e) {
+			// TODO Auto-generated catch block
+
+		} finally {
+			takeSnap();
+		}
+
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void clickById(String id) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
+			driver.findElement(By.id(id)).click();
+			System.out.println("Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + id + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void clickByClassName(String classVal) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.className(classVal)));
+			driver.findElement(By.className(classVal)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + classVal + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+			e.printStackTrace();
+
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void clickByName(String name) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.name(name)));
+			driver.findElement(By.name(name)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + name + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void clickByLink(String name) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.linkText(name)));
+			driver.findElement(By.linkText(name)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + name + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void clickByXpath(String xpathVal) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathVal)));
+			driver.findElement(By.xpath(xpathVal)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpathVal + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+	}
+	
+	protected void doubleClick(String xpath) {
+		WebElement ele = driver.findElement(By.xpath(xpath));
+		Actions act = new Actions(driver);
+		WebElement myElement = new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(ele));
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", myElement);
+		act.moveToElement(ele).click().build().perform();
+		
+	}
+	
+	protected void doubleClickById(String id) {
+		/*
+		 * WebElement ele = driver.findElement(By.id(id)); Actions act = new
+		 * Actions(driver); WebElement myElement = new WebDriverWait(driver,
+		 * Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(ele));
+		 * ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();",
+		 * myElement); act.moveToElement(myElement).click().build().perform();
+		 */
+		
+		WebElement el = driver.findElement(By.id(id));
+	    System.out.println("Making element visible");  
+	    ((JavascriptExecutor)driver).executeScript("arguments[0].style.display = 'block';", el);
+	    el.clear();
+	    System.out.println("Cleared");              
+	    el.sendKeys("E:\\UKInterview\\\\NewSelWorkspace\\\\Resume\\\\ResumeinUKFormat\\\\TestingResume\\\\PVResume\\\\pic\\\\Santhosh_PatrickVijayan_CV.pdf");
+		
+	}
+	
+	public void switchToWindow(int index) {
+		try {
+			Set<String> allWindows = driver.getWindowHandles();
+			List<String> allhandles = new ArrayList<String>(allWindows);
+			driver.switchTo().window(allhandles.get(index));
+			//reportStep("The Window With index: " + index + " switched successfully", "info", false);
+			//reportStep(getDriver().getTitle(), "info");
+		} catch (NoSuchWindowException e) {
+			//reportStep("The Window With index: " + index + " not found\n" + e.getMessage(), "fail", false);
+		} catch (Exception e) {
+			//reportStep("The Window With index: " + index + " not found\n" + e.getMessage(), "fail", false);
+		}
+	}
+
+	public void clickByTagName(String tagName) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.tagName(tagName)));
+			driver.findElement(By.tagName(tagName)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + tagName + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public String getTextById(String idVal) {
+		String textValue = null;
+		try {
+			textValue = driver.findElement(By.id(idVal)).getText();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + idVal + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+		return textValue;
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public String getTextByXpath(String xpathVal) {
+		String textValue = null;
+		try {
+			textValue = driver.findElement(By.xpath(xpathVal)).getText();
+			System.out.println(" The element is ");
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpathVal + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+		return textValue;
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void selectVisibleTextById(String id, String value) {
+		try {
+			WebElement elementVisible = driver.findElement(By.id(id));
+			Select element = new Select(elementVisible);
+			element.selectByVisibleText(value);
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + id + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	public void clickByActions(String xpath) {
+		try {
+			WebElement elementVisible = driver.findElement(By.xpath(xpath));
+			Actions builder = new Actions(driver);
+			builder.moveToElement(elementVisible).perform();
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + xpath + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+
+	}
+	
+	public void pause(int timeout) {
+		try {
+			Thread.sleep(timeout);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void hoverAndClick(WebElement ele) {
+		/*
+		 * Actions act = new Actions(driver);
+		 * act.moveToElement(wait.until(ExpectedConditions.elementToBeClickable(ele))).
+		 * pause(5000).click().build().perform();*/
+		Actions act = new Actions(driver);
+		WebElement myElement = new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(ele));
+		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", myElement);
+		act.moveToElement(ele).click().build().perform();
+	}
+	
+	public void defaultContent() {
+		try {
+			driver.switchTo().defaultContent();
+		} catch (Exception e) {
+			//reportStep("No such window " + e.getMessage(), "fail", false);
+		}
+	}
+
+	public void fileUpload(String id, String data) {
+		try {
+			WebElement elementVisible = driver.findElement(By.id(id));
+			Actions act = new Actions(driver);
+			((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", elementVisible);
+			act.moveToElement(elementVisible).doubleClick().build().perform();
+		//	hoverAndClick(elementVisible);
+			pause(2000);
+
+			// Store the copied text in the clipboard
+			StringSelection stringSelection = new StringSelection(data);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+
+			// Paste it using Robot class
+			Robot robot = new Robot();
+
+			// Enter to confirm it is uploaded
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_V);
+
+			robot.keyRelease(KeyEvent.VK_V);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+
+			Thread.sleep(5000);
+			robot.keyPress(KeyEvent.VK_ENTER);
+			robot.keyRelease(KeyEvent.VK_ENTER);
+			//reportStep("The file is selected Successfully", "pass");
+		} catch (Exception e) {
+			//reportStep("The file is not selected Successfully", "fail");
+		}
+
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	// @Override
+	public void selectIndexById(String id, String value) {
+		try {
+			indexValue = Integer.parseInt(value);
+			WebElement elementVisible = driver.findElement(By.id(id));
+			Select dropDownValue = new Select(elementVisible);
+			dropDownValue.selectByIndex(indexValue);
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + id + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchWindowException, WebDriverException
+	 */
+	// @Override
+	public void switchToParentWindow() {
+		try {
+			driver.switchTo().window(parentHandle);
+		} catch (NoSuchWindowException e) {
+			System.out.println("Window" + parentHandle + " not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchWindowException, WebDriverException
+	 */
+	// @Override
+	public void switchToLastWindow() {
+		try {
+			Set<String> totalwindows;
+			totalwindows = driver.getWindowHandles();
+			System.out.println(totalwindows.size());
+			for (String onewindow : totalwindows) {
+				driver.switchTo().window(onewindow);
+			}
+			takeSnap();
+		} catch (NoSuchWindowException e) {
+			System.out.println("Window is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+		} finally {
+			takeSnap();
+		}
+	}
+
+	/**
+	 * Exceptions- NoAlertPresentException, UnhandledAlertException,
+	 * WebDriverException
+	 */
+	// @Override
+	public void acceptAlert() {
+		try {
+			driver.switchTo().alert().accept();
+		} catch (NoAlertPresentException e) {
+			System.out.println("The alert which your are trying to switch is not found");
+
+		} catch (UnhandledAlertException e) {
+			System.out.println("An alert appears and it is not handled properly");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+		}
+	}
+
+	/**
+	 * Exceptions- WebDriverException
+	 */
+	/*
+	 * @Override public long takeSnap() { long number = (long)
+	 * Math.floor(Math.random() * 900000000L) + 10000000L; try {
+	 * FileUtils.copyFile(getDriver().getScreenshotAs(OutputType.FILE), new
+	 * File("./"+Reporter.folderName+"/images/" + number + ".jpg")); } catch
+	 * (WebDriverException e) { reportStep("The browser has been closed." +
+	 * e.getMessage(), "fail"); } catch (IOException e) {
+	 * reportStep("The snapshot could not be taken " + e.getMessage(), "warning"); }
+	 * return number; }
+	 */
+	/**
+	 * Exceptions- WebDriverException
+	 */
+	// @Override
+	public void quitBrowser() {
+
+		try {
+			driver.quit();
+			System.out.println("All browsers closed");
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		}
+	}
+
+	/**
+	 * Exceptions- NoSuchElementException, WebDriverException
+	 */
+	public void clickByXpathWOSnap(String xpathVal) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathVal)));
+			driver.findElement(By.xpath(xpathVal)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+		}
+	}
+
+	public String getTextByTagName(String tagVal) {
+		String textValue = null;
+		try {
+			textValue = driver.findElement(By.tagName(tagVal)).getText();
+			System.out.println(" Text value is " + textValue);
+		} catch (NoSuchElementException e) {
+			System.out.println("The element " + tagVal + " is not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} finally {
+			takeSnap();
+		}
+		return textValue;
+	}
+
+	public void threadSleep(long time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void clickByLinkWOSnap(String linkVal) {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(By.linkText(linkVal)));
+			driver.findElement(By.linkText(linkVal)).click();
+			System.out.println(" Click is successful");
+		} catch (NoSuchElementException e) {
+			System.out.println("Webdriver is lost or not found");
+
+		} catch (WebDriverException e) {
+			System.out.println("Webdriver is lost or not found");
+		}
+	}
+
+	@Override
+	public long takeSnap() {
+	long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L;
+	try {
+		FileUtils.copyFile(driver.getScreenshotAs(OutputType.FILE),
+				new File("./"+Report.folderName+"/images/" + number + ".jpg"));
+	} catch (WebDriverException e) {
+		//reportStep("The browser has been closed." + e.getMessage(), "fail");
+	} catch (IOException e) {
+		//reportStep("The snapshot could not be taken " + e.getMessage(), "warning");
+	}
+	return number;
+}
+	
+	protected void scrollDown(String xpath) throws InterruptedException {
+		/*
+		 * JavascriptExecutor js = (JavascriptExecutor) driver;
+		 * js.executeScript("window.scroll(0,1000)");
+		 */
+
+		((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath(xpath)));
+		Thread.sleep(2000);
+		Actions act = new Actions(driver);
+		act.sendKeys(Keys.PAGE_DOWN).build().perform();
+		
+	}
+	
+	protected void scroll(String xpath) throws InterruptedException {
+		/*
+		 * JavascriptExecutor js = (JavascriptExecutor) driver;
+		 * js.executeScript("window.scroll(0,1000)");
+		 */
+		((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath(xpath)));			
+	}
+	
+	protected void scrollDownUsingJS() throws InterruptedException {
+		Actions act = new Actions(driver);
+		act.sendKeys(Keys.PAGE_DOWN).build().perform();			
+	}
+
+}
